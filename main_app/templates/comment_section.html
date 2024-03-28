@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<br>
+<div class="chat-container">
+    <h1>Comment Section</h1>
+    <div id="comment-history">
+        {% for comment in all_comments %}
+            <div class="msg-row-container">
+                <div class="msg-row-container">
+                    <p>{{ comment.user.username }}</p>
+                </div>
+                <div class="column-container">
+                    <span>{{ comment.timestamp }}</span>
+                    <p class="msg-content">{{ comment.content }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="message" placeholder="Type your comment here" required>
+        <button type="submit">Post Comment</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,87 @@
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    color: #4F6367;
+}
+
+p {
+    margin: 4px;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+footer.page-footer {
+    padding-top: 0;
+    text-align: right;
+}
+
+.column-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.row-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-profile {
+    margin-top: 50px;
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    border: 2px solid black;
+}
+
+.display-name {
+    color: #FE5F55;
+}
+
+.btn-Edit {
+    background-color: #FE5F55;
+    width: 100px;
+    height: 50px;
+    border-radius: 10px;
+    margin: 5px;
+    border: none;
+}
+
+.btn-Delete {
+    background-color: #4F6367;
+    width: 100px;
+    height: 50px;
+    border-radius: 10px;
+    margin: 5px;
+    border: none;
+}
+
+.msg-picture {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 4px;
+}
+
+.msg-row-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.msg-content {
+    margin-top: 5px;
+    margin-left: 20px;
+    background-color: rgb(246, 195, 68);
+    width: 250px;
+    height: 80px;
+    padding: 10px;
+    border-radius: 6px;
+}
+

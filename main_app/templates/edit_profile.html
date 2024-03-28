@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<br>
+<h1 style="color:#4F6367;">Update <span style="color:#FE5F55;">{{user.username}}</span></h1>
+
+<form action="" method="POST" enctype="multipart/form-data">
+
+  <br>
+  {% csrf_token %}
+  {{ form.as_p }}
+  <p>'this form' link does not change password, go to <a href="{% url 'change_password'%}" style="color:#FE5F55;">
+      'Change Password Here' </a> instead.</p>
+  <br>
+  <input type="submit" value="Update!" class="btn" style="background-color:#FE5F55;">
+</form>
+
+
+{% endblock %}

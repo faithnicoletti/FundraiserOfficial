@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<br>
+<h1>Welcome,<span class="display-name"> {{ user.username }}!</span></h1>
+<div class="column-container">
+  <br>
+  
+  <p>Email: {{ user.email }}</p>
+  <p>Name: {{ user.name }}</p>
+
+  <div class="row-container">
+    <div class="card-action">
+      {% if request.user.id == profile.user.id %}
+      <button class="btn-Delete" onclick="location.href='{% url 'edit_profile'%}'">
+        Edit
+      </button>
+    </div>
+    <div>
+      <button class="btn-Edit" onclick="location.href='{% url 'delete_user' user.id%}'">
+        Delete
+      </button>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

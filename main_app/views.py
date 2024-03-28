@@ -1,7 +1,7 @@
 import stripe 
-from django.shortcuts import render
+import psycopg2
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, update_session_auth_hash, authenticate
+from django.contrib.auth import login, update_session_auth_hash, authenticate, logout
 from django.contrib.auth.forms import (
     UserCreationForm,
     UserChangeForm,
@@ -15,7 +15,7 @@ from .models import Profile
 from django.views.generic.edit import DeleteView, UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
-from .models import CommentSection
+from .models import CommentSection, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template import RequestContext, context
 
@@ -26,12 +26,11 @@ def home(request):
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(required=True)
     first_name = forms.CharField(max_length=250)
-    last_name = forms.CharField(max_length=250)
 
 
 class Meta(UserCreationForm.Meta):
     model = User
-    fields = ('username', 'name','email','password1', 'password2')
+    fields = ('username', 'first_name','email','password1', 'password2')
 
 
 def signup(request):
@@ -41,7 +40,7 @@ def signup(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.email = form.cleaned_data['email']
-            user.name = form.cleaned_data['name']
+            user.first_name = form.cleaned_data['first_name']
             user.save()
             profile = Profile.objects.create(
                 user=user,
@@ -75,9 +74,9 @@ def edit_profile(request):
             request.POST, request.FILES, instance=request.user)
 
         if form.is_valid():
-            name = form.cleaned_data['name']
-            if name:
-                request.user.profile.name = name
+            first_name = form.cleaned_data['first_name']
+            if first_name:
+                request.user.profile.first_name = first_name
                 request.user.profile.save()
             form.save()
             return redirect('profile')
@@ -96,7 +95,7 @@ class EditProfileForm(LoginRequiredMixin, UserChangeForm):
         fields = (
             'username',
             'email',
-            'name',
+            'first_name',
 
         )
 
@@ -129,15 +128,19 @@ class DeleteUser(SuccessMessageMixin, DeleteView):
 @login_required
 def comment_section(request, other_username):
     user = request.user
-    other_username = User.objects.get(username=other_username)
+    other_user = User.objects.get(username=other_username)
     
     if request.method == 'POST':
         message = request.POST['message']
-        comment_section = CommentSection.objects.create(user=user, other_user=other_username, message=message)
+        print("Received message:", message)
+        comment = Comment.objects.create(user=user, content=message)
+        comment_section = CommentSection.objects.create()
+        comment_section.participants.set([user, other_user])
+        comment_section.comments.set([comment])
        
-    comment_sections = CommentSection.objects.all().order_by('-timestamp')
+    all_comments = Comment.objects.all().order_by('-timestamp')
     
-    context = {'user': user, 'other_user': other_username, 'comment_sections': comment_sections}
+    context = {'user': user, 'other_user': other_username, 'all_comments': all_comments}
     return render(request, 'comment_section.html', context)
 
 
@@ -146,3 +149,4 @@ def comment_history(request):
 
     context = {'all_comments': all_comments}
     return render(request, 'comment_history.html', context)
+

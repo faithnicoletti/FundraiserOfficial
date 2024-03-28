@@ -26,11 +26,12 @@ def home(request):
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(required=True)
     first_name = forms.CharField(max_length=250)
+    last_name = forms.CharField(max_length=250)
 
 
 class Meta(UserCreationForm.Meta):
     model = User
-    fields = ('username', 'first_name','email','password1', 'password2')
+    fields = ('username', 'first_name','last_name', 'email','password1', 'password2')
 
 
 def signup(request):
@@ -41,6 +42,7 @@ def signup(request):
             user = form.save(commit=False)
             user.email = form.cleaned_data['email']
             user.first_name = form.cleaned_data['first_name']
+            user.last_name = form.cleaned_data['last_name']
             user.save()
             profile = Profile.objects.create(
                 user=user,
@@ -69,24 +71,15 @@ def profile(request):
 
 def edit_profile(request):
     if request.method == 'POST':
-
-        form = EditProfileForm(
-            request.POST, request.FILES, instance=request.user)
-
+        form = EditProfileForm(request.POST, instance=request.user)
         if form.is_valid():
-            first_name = form.cleaned_data['first_name']
-            if first_name:
-                request.user.profile.first_name = first_name
-                request.user.profile.save()
             form.save()
             return redirect('profile')
-
     else:
         form = EditProfileForm(instance=request.user)
 
     args = {'form': form}
     return render(request, 'edit_profile.html', args)
-
 
 class EditProfileForm(LoginRequiredMixin, UserChangeForm):
 
@@ -96,6 +89,7 @@ class EditProfileForm(LoginRequiredMixin, UserChangeForm):
             'username',
             'email',
             'first_name',
+            'last_name'
 
         )
 

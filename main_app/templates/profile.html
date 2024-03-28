@@ -13,11 +13,14 @@
     {% else %}
     0
     {% endif %}</p>
-
+    <br>
 
   <div class="row-container">
     <div class="card-action">
       {% if request.user.id == profile.user.id %}
+      <button class="btn-Donate" onclick="location.href='{% url 'donate'%}'">
+        Donate Now!
+      </button>
       <button class="btn-Delete" onclick="location.href='{% url 'edit_profile'%}'">
         Edit
       </button>

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div>
+        <br>
+        <!-- <img id="success-icon" src="{% static 'images/check.png' %}"> -->
+        <h4>Thank you for your contribution of ${{amount}}!</h4>
+        <br>
+        <p>Hundreds and thousands of Palestinian families have lost everything. 
+            Your donation will be going directly to a family in need.</p>
+        <br>
+        <p>We will continue raising money until race day on May 12.
+        </p>
+        <hr>
+        <a class="myButton" href="{% url 'profile' %}">&#x2190;Back to profile page</a>
+    </div>
+
+    {% endblock content %}

@@ -9,13 +9,14 @@ from django.contrib.auth.forms import (
 )
 from django.contrib.auth.decorators import login_required
 from django import forms
+from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db import models
 from .models import Profile
 from django.views.generic.edit import DeleteView, UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
-from .models import CommentSection, Comment
+from .models import CommentSection, Comment, Profile, Fundraiser, Donation
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template import RequestContext, context
 
@@ -118,6 +119,19 @@ class DeleteUser(SuccessMessageMixin, DeleteView):
     success_message = "User has been deleted"
     success_url = reverse_lazy('home')
 
+@login_required
+def charge(request):
+    amount = 5
+    if request.method == 'POST':
+        print('Data:', request.POST)
+    
+    return redirect(reverse('success', args=[amount]))
+
+@login_required
+def successMsg(request, args):
+    amount = args 
+    
+    return render(request, 'success.html', {'amount': amount})
 
 @login_required
 def comment_section(request, other_username):

@@ -11,5 +11,6 @@ urlpatterns = [
     path('change-password/', views.change_password, name='change_password'),
     path('delete_user/<int:pk>/', views.DeleteUser.as_view(), name='delete_user'),
     path('comment_section/<str:other_username>/', views.comment_section, name='comment_section'),
+    path('success/<str:args>/', views.successMsg, name='success'),
     path('comment_history/', views.comment_history, name='comment_history'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

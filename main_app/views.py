@@ -124,13 +124,14 @@ def charge(request):
     amount = 5
     if request.method == 'POST':
         print('Data:', request.POST)
-    
-    return redirect(reverse('success', args=[amount]))
+        return redirect(reverse('success', args=[amount]))
+    else:
+        return render(request, 'charge.html')
 
 @login_required
 def successMsg(request, args):
     amount = args 
-    
+
     return render(request, 'success.html', {'amount': amount})
 
 @login_required

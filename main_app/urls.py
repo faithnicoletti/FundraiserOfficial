@@ -13,4 +13,5 @@ urlpatterns = [
     path('comment_section/<str:other_username>/', views.comment_section, name='comment_section'),
     path('success/<str:args>/', views.successMsg, name='success'),
     path('comment_history/', views.comment_history, name='comment_history'),
+    path('charge/', views.charge, name='charge')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

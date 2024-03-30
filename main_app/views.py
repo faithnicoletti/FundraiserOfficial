@@ -1,6 +1,7 @@
 import stripe 
 import psycopg2
 import time
+from datetime import datetime
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, update_session_auth_hash, authenticate, logout
 from django.contrib.auth.forms import (
@@ -16,12 +17,13 @@ from django import forms
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import Sum
 from django.http import JsonResponse
 from .models import Profile, ProfilePayment
 from django.views.generic.edit import DeleteView, UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
-from .models import CommentSection, Comment, Profile, Fundraiser, Donation, ProfilePayment, create_profile_payment
+from .models import CommentSection, Comment, Profile, Fundraiser, ProfilePayment, create_profile_payment
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template import RequestContext, context
 from django.views.decorators.csrf import csrf_exempt
@@ -167,12 +169,16 @@ def payment_successful(request):
     profile = request.user.profile
     
     try:
-        # Retrieve the associated UserPayment object using the profile
-        user_payment = profile.profilepayment
-        user_payment.stripe_checkout_id = checkout_session_id
-        user_payment.save()
+        # Retrieve the associated ProfilePayment object using the profile
+        profile_payment = profile.profilepayment
+        profile_payment.stripe_checkout_id = checkout_session_id
+        profile_payment.payment_bool = True
+        profile_payment.donation_amount = session.amount_total / 100
+        profile_payment.timestamp = datetime.now()  # Update timestamp to current time
+        profile_payment.save()
+
     except ProfilePayment.DoesNotExist:
-        # Handle the case where UserPayment object doesn't exist
+        # Handle the case where ProfilePayment object doesn't exist
         pass
     
     return render(request, 'payment_successful.html', {'customer': customer})
@@ -202,40 +208,10 @@ def stripe_webhook(request):
 		session = event['data']['object']
 		session_id = session.get('id', None)
 		time.sleep(15)
-		user_payment = UserPayment.objects.get(stripe_checkout_id=session_id)
+		user_payment = ProfilePayment.objects.get(stripe_checkout_id=session_id)
 		user_payment.payment_bool = True
 		user_payment.save()
 	return HttpResponse(status=200)
-
-# @require_POST
-# @login_required
-# def create_payment_intent(request):
-#     amount_usd = 10.99  # Set the amount in USD
-#     try:
-#         intent = stripe.PaymentIntent.create(
-#             amount=int(amount_usd * 100),  # Stripe expects amount in cents
-#             currency="usd",  # Currency in USD
-#             automatic_payment_methods={"enabled": True},
-#         )
-#         return JsonResponse({'client_secret': intent.client_secret})
-#     except stripe.error.StripeError as e:
-#         # Handle Stripe errors
-#         return JsonResponse({'error': str(e)}, status=500)
-
-# @login_required
-# def charge(request):
-#     if request.method == 'POST':
-#         amount = request.POST.get('amount', 0)
-#         print('Data:', request.POST)
-#         return redirect(reverse('success', args=[amount]))
-#     else:
-#         return render(request, 'charge.html')
-
-# @login_required
-# def successMsg(request, args):
-#     amount = args 
-
-#     return render(request, 'success.html', {'amount': amount})
 
 @login_required
 def comment_section(request, other_username):

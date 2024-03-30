@@ -7,12 +7,7 @@
 
   <p>Name: {{ profile.user.first_name }} {{profile.user.last_name}}</p>
   <p>Email: {{ user.email }}</p>
-  <p>Amount Donated: 
-    {% if profile.amount_donated %}
-    {{ profile.amount_donated }}
-    {% else %}
-    0
-    {% endif %}</p>
+  <p> Total donation amount: ${{ profile.total_amount_donated }}</p>
     <br>
 
   <div class="row-container">

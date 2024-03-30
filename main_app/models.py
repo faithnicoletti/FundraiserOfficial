@@ -3,12 +3,18 @@ from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
+from django.db.models import Sum
+
 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    amount_donated = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    total_amount_donated = models.DecimalField(max_digits=10, decimal_places=2, default=0)
    
+    def total_amount_donated(self):
+        return self.profilepayment_set.aggregate(total_donated=Sum('donation_amount'))['total_donated'] or 0
+
     def __str__(self):
         return self.user.username
 
@@ -32,23 +38,20 @@ class Fundraiser(models.Model):
     def __str__(self):
         return self.description
 
-class Donation(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    amount_donated = models.DecimalField(max_digits=10, decimal_places=2)
-    timestamp = models.DateTimeField(auto_now_add=True)
 
 
-    def __str__(self):
-        return f"{self.user.username} donated {self.amount}!!! {self.timestamp}"
-
-@login_required
 class ProfilePayment(models.Model):
-    profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     payment_bool = models.BooleanField(default=False)
+    donation_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    timestamp = models.DateTimeField(default=datetime.now)
     stripe_checkout_id = models.CharField(max_length=500)
 
 @login_required
 @receiver(post_save, sender=Profile)
 def create_profile_payment(sender, instance, created, **kwargs):
-    if created:
-        ProfilePayment.objects.create(profile=instance)
+    if not created:
+        profile_payment = ProfilePayment.objects.filter(profile=instance).first()
+        if profile_payment:
+            profile_payment.donation_amount = instance.total_amount_donated()
+            profile_payment.save()

@@ -131,6 +131,8 @@ class DeleteUser(SuccessMessageMixin, DeleteView):
 def charge(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY
     if request.method == 'POST':
+        amount = request.POST.get('amount')
+        amount_in_cents = int(float(amount) * 100)
         checkout_session = stripe.checkout.Session.create(
             payment_method_types = ['card'],
             line_items=[
@@ -140,7 +142,7 @@ def charge(request):
                 'product_data': {
                     'name': 'Donation',
                 },
-                'unit_amount': 1000,  # Amount in cents
+                'unit_amount': amount_in_cents # Amount in cents
             },
             'quantity': 1,
         },

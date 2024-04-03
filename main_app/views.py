@@ -168,18 +168,14 @@ def payment_successful(request):
     # Retrieve the profile associated with the current user
     profile = request.user.profile
     
-    try:
-        # Retrieve the associated ProfilePayment object using the profile
-        profile_payment = profile.profilepayment
-        profile_payment.stripe_checkout_id = checkout_session_id
-        profile_payment.payment_bool = True
-        profile_payment.donation_amount = session.amount_total / 100
-        profile_payment.timestamp = datetime.now()  # Update timestamp to current time
-        profile_payment.save()
-
-    except ProfilePayment.DoesNotExist:
-        # Handle the case where ProfilePayment object doesn't exist
-        pass
+    # Create a new ProfilePayment object for the current payment
+    profile_payment = ProfilePayment.objects.create(
+        profile=profile,
+        stripe_checkout_id=checkout_session_id,
+        payment_bool=True,
+        donation_amount=session.amount_total / 100,
+        timestamp=datetime.now()
+    )
     
     return render(request, 'payment_successful.html', {'customer': customer})
 

@@ -12,7 +12,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     total_amount_donated = models.DecimalField(max_digits=10, decimal_places=2, default=0)
    
-    def total_amount_donated(self):
+    def calculate_total_donated(self):
         return self.profilepayment_set.aggregate(total_donated=Sum('donation_amount'))['total_donated'] or 0
 
     def __str__(self):
@@ -30,13 +30,12 @@ class CommentSection(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
 class Fundraiser(models.Model):
-    description = models.TextField()
     goal_amount = models.DecimalField(max_digits=10, decimal_places=2, default=1200.00)
     current_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     
 
     def __str__(self):
-        return self.description
+        return self.goal_amount
 
 
 
@@ -48,10 +47,9 @@ class ProfilePayment(models.Model):
     stripe_checkout_id = models.CharField(max_length=500)
 
 @login_required
-@receiver(post_save, sender=Profile)
 def create_profile_payment(sender, instance, created, **kwargs):
     if not created:
         profile_payment = ProfilePayment.objects.filter(profile=instance).first()
         if profile_payment:
-            profile_payment.donation_amount = instance.total_amount_donated()
+            profile_payment.donation_amount = instance.total_amount_donated
             profile_payment.save()

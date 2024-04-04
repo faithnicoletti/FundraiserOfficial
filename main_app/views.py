@@ -79,7 +79,9 @@ def profile(request):
     except Profile.DoesNotExist:
         profile = Profile.objects.create(user=user)
 
-    context = {'user': user, 'profile': profile}
+    total_amount_donated = ProfilePayment.objects.filter(profile=profile).aggregate(total_amount_donated=Sum('donation_amount'))['total_amount_donated'] or 0
+
+    context = {'user': user, 'profile': profile, 'total_amount_donated': total_amount_donated}
     return render(request, 'profile.html', context)
 
 

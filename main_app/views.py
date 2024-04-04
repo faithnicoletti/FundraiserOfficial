@@ -23,7 +23,7 @@ from .models import Profile, ProfilePayment
 from django.views.generic.edit import DeleteView, UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
-from .models import CommentSection, Comment, Profile, Fundraiser, ProfilePayment, create_profile_payment
+from .models import CommentSection, Comment, Profile, ProfilePayment
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template import RequestContext, context
 from django.views.decorators.csrf import csrf_exempt
@@ -31,7 +31,11 @@ from django.views.decorators.csrf import csrf_exempt
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 def home(request):
-    return render(request, 'home.html')
+    fundraiser = Fundraiser.objects.first()
+    goal_amount = 2000
+
+    context = {'goal_amount': goal_amount}
+    return render(request, 'home.html', context)
 
 
 class SignUpForm(UserCreationForm):
@@ -165,10 +169,8 @@ def payment_successful(request):
     session = stripe.checkout.Session.retrieve(checkout_session_id)
     customer = stripe.Customer.retrieve(session.customer)
     
-    # Retrieve the profile associated with the current user
     profile = request.user.profile
-    
-    # Create a new ProfilePayment object for the current payment
+
     profile_payment = ProfilePayment.objects.create(
         profile=profile,
         stripe_checkout_id=checkout_session_id,

@@ -1,4 +1,4 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
 
 {% block content %}
 <br>
@@ -9,5 +9,9 @@
 <h5 style="color: #4F6367;">Sign up <a href="{% url 'signup' %}" style="color: #FE5F55;">here!</a></h5>
 <br>
 <h5 style="color: #4F6367;">Already have an account? <a href="{% url 'login' %}" style="color: #FE5F55;">Log in!</a></h5>
-{% endblock %}
+<br>
+<!-- Display the goal_amount and current_amount -->
+<h3>Goal Amount: ${{ goal_amount }}</h3>
+<h3>Current Amount Donated: ${{ current_amount }}</h3>
 
+{% endblock %}

@@ -83,5 +83,9 @@ footer.page-footer {
     height: 80px;
     padding: 10px;
     border-radius: 6px;
+
+    .cursor-pointer {
+        cursor: pointer;
+    }
 }
 

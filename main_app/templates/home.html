@@ -18,11 +18,35 @@
 <br>
 <h5 style="color: #4F6367;">Already have an account? <a href="{% url 'login' %}" style="color: #FE5F55;">Log in!</a></h5>
 <br>
-<h2>Donations</h2>
-<ul>
-  {% for payment in recent_donations %}
-    <li>{{ payment.profile.user.username }} donated ${{ payment.donation_amount }} on {{ payment.timestamp }}!</li>
-  {% endfor %}
-</ul>
+<div class="dropdown-menu d-block position-static border-0 pt-0 mx-0 rounded-3 shadow overflow-hidden w-280px" data-bs-theme="dark">
+  <form class="p-2 mb-2 bg-dark border-bottom border-dark" id="donations-form">
+    <a href="#" id="toggle-donations" class="text-white cursor-pointer">DONATIONS:</a>
+  </form>
+  <ul class="list-unstyled mb-0" id="donations-list" style="display: none;">
+      {% for payment in recent_donations %}
+      <li>
+          <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
+              <span class="d-inline-block bg-success rounded-circle p-1"></span>
+              {{ payment.profile.user.username }} donated ${{ payment.donation_amount }}! 
+              <br>
+              {{ payment.timestamp }}
+          </a>
+      </li>
+      {% endfor %}
+  </ul>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const toggleBtn = document.getElementById('toggle-donations');
+    const donationsList = document.getElementById('donations-list');
 
+    toggleBtn.addEventListener('click', function() {
+        if (donationsList.style.display === 'none') {
+            donationsList.style.display = 'block';
+        } else {
+            donationsList.style.display = 'none';
+        }
+    });
+});
+</script>
 {% endblock %}

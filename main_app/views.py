@@ -4,11 +4,8 @@ import time
 from datetime import datetime
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, update_session_auth_hash, authenticate, logout
-from django.contrib.auth.forms import (
-    UserCreationForm,
-    UserChangeForm,
-    PasswordChangeForm
-)
+from django.contrib.auth.forms import UserCreationForm
+from .forms import CustomUserChangeForm, CustomPasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.views.decorators.http import require_POST
@@ -32,8 +29,15 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 def home(request):
    current_amount = ProfilePayment.objects.aggregate(current_amount=Sum('donation_amount'))['current_amount'] or 0
+   goal_amount = ProfilePayment().goal_amount
 
-   context = {'current_amount': current_amount}
+   current_amount_float = float(current_amount)
+
+   percentage = (current_amount_float / goal_amount) * 100
+
+   recent_donations = ProfilePayment.objects.order_by('-timestamp')[:5]
+
+   context = {'current_amount': current_amount, 'percentage': percentage, 'recent_donations': recent_donations}
    return render(request, 'home.html', context)
 
 
@@ -87,44 +91,34 @@ def profile(request):
 
 def edit_profile(request):
     if request.method == 'POST':
-        form = EditProfileForm(request.POST, instance=request.user)
+        form = CustomUserChangeForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Profile successfully updated.')
             return redirect('profile')
     else:
-        form = EditProfileForm(instance=request.user)
+        form = CustomUserChangeForm(instance=request.user)
 
-    args = {'form': form}
-    return render(request, 'edit_profile.html', args)
-
-class EditProfileForm(LoginRequiredMixin, UserChangeForm):
-
-    class Meta:
-        model = User
-        fields = (
-            'username',
-            'email',
-            'first_name',
-            'last_name'
-        )
+    return render(request, 'edit_profile.html', {'form': form})
 
 
 def change_password(request):
     if request.method == 'POST':
-        form = PasswordChangeForm(data=request.POST, user=request.user)
+        form = CustomPasswordChangeForm(data=request.POST, user=request.user)
 
         if form.is_valid():
             form.save()
             update_session_auth_hash(request, form.user)
+            messages.success(request, 'Password successfully changed.')
             return redirect('profile')
         else:
             return redirect('change-password')
 
     else:
-        form = PasswordChangeForm(user=request.user)
+        form = CustomPasswordChangeForm(user=request.user)
 
-        args = {'form': form}
-        return render(request, 'change_password.html', args)
+    args = {'form': form}
+    return render(request, 'change_password.html', args)
 
 
 class DeleteUser(SuccessMessageMixin, DeleteView):

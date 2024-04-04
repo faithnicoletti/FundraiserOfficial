@@ -13,7 +13,8 @@
     <link rel="stylesheet" href="{% static 'css/style.css'%}">
 </head>
 
-<body style="background-color:white;">
+<body>
+    
     <header class="text-bg-dark">
         <nav>
             <div class="nav-wrapper text-bg-dark">
@@ -25,7 +26,7 @@
 
 
                     <li><a href="{% url 'profile' %}" class="nav-link px-2 text-white">Profile</a></li>
-                    <li><a href="{% url 'comment_section' other_username=user.username %}" class="nav-link px-2 text-white">Leave a Comment</a></li>
+                    <li><a href="{% url 'comment_section' other_username=user.username %}" class="nav-link px-2 text-white">Posts</a></li>
                     <form id="logout-form" action="{% url 'logout' %}" method="post">
                         {% csrf_token %}
                         <li><button type="submit" class="btn btn-warning">Logout</button></li>

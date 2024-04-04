@@ -17,7 +17,7 @@ class ProfilePayment(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     payment_bool = models.BooleanField(default=False)
     donation_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    timestamp = models.DateTimeField(default=datetime)
+    timestamp = models.DateTimeField(default=datetime.now)
     stripe_checkout_id = models.CharField(max_length=500)
 
     def update_total_amount_donated(self):

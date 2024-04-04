@@ -31,11 +31,10 @@ from django.views.decorators.csrf import csrf_exempt
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 def home(request):
-    fundraiser = Fundraiser.objects.first()
-    goal_amount = 2000
+   current_amount = ProfilePayment.objects.aggregate(current_amount=Sum('donation_amount'))['current_amount'] or 0
 
-    context = {'goal_amount': goal_amount}
-    return render(request, 'home.html', context)
+   context = {'current_amount': current_amount}
+   return render(request, 'home.html', context)
 
 
 class SignUpForm(UserCreationForm):
@@ -105,7 +104,6 @@ class EditProfileForm(LoginRequiredMixin, UserChangeForm):
             'email',
             'first_name',
             'last_name'
-
         )
 
 
@@ -163,23 +161,33 @@ def charge(request):
 
 
 ## use Stripe dummy card: 4242 4242 4242 4242
+@login_required
 def payment_successful(request):
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-    checkout_session_id = request.GET.get('session_id', None)
-    session = stripe.checkout.Session.retrieve(checkout_session_id)
-    customer = stripe.Customer.retrieve(session.customer)
-    
-    profile = request.user.profile
-
-    profile_payment = ProfilePayment.objects.create(
-        profile=profile,
-        stripe_checkout_id=checkout_session_id,
-        payment_bool=True,
-        donation_amount=session.amount_total / 100,
-        timestamp=datetime.now()
-    )
-    
-    return render(request, 'payment_successful.html', {'customer': customer})
+    if request.method == 'GET':
+        # Assuming the checkout session id is retrieved from the query parameters
+        checkout_session_id = request.GET.get('session_id')
+        try:
+            # Retrieve the session information from Stripe
+            session = stripe.checkout.Session.retrieve(checkout_session_id)
+            customer = stripe.Customer.retrieve(session.customer)
+            
+            # Retrieve or create the profile associated with the current user
+            profile, created = Profile.objects.get_or_create(user=request.user)
+            
+            # Create a new ProfilePayment object for the current payment
+            profile_payment = ProfilePayment.objects.create(
+                profile=profile,
+                stripe_checkout_id=checkout_session_id,
+                payment_bool=True,
+                donation_amount=session.amount_total / 100,  # Amount in dollars
+                timestamp=datetime.now()
+            )
+            
+            return render(request, 'payment_successful.html', {'customer': customer})
+        except Exception as e:
+        
+            messages.error(request, "Payment failed. Please try again.")
+            return redirect('home')
 
 
 def payment_cancelled(request):

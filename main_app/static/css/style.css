@@ -32,41 +32,12 @@ footer.page-footer {
     align-items: center;
 }
 
-.image-profile {
-    margin-top: 50px;
-    border-radius: 50%;
-    width: 200px;
-    height: 200px;
-    border: 2px solid black;
-}
+.btn-custom-width {
+    width: 20px;
+  }
 
 .display-name {
     color: #FE5F55;
-}
-
-.btn-Edit {
-    background-color: #FE5F55;
-    width: 100px;
-    height: 50px;
-    border-radius: 10px;
-    margin: 5px;
-    border: none;
-}
-
-.btn-Delete {
-    background-color: #4F6367;
-    width: 100px;
-    height: 50px;
-    border-radius: 10px;
-    margin: 5px;
-    border: none;
-}
-
-.msg-picture {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin: 4px;
 }
 
 .msg-row-container {

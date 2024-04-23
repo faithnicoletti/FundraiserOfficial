@@ -1,32 +1,34 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 <br>
 <h1>Welcome,<span class="display-name"> {{ user.username }}!</span></h1>
-<div class="column-container">
-  <br>
-
-  <p>Name: {{ user.first_name }} {{ user.last_name}}</p>
-  <p>Email: {{ user.email }}</p>
-  <p>Total donation amount: ${{ total_amount_donated }}</p> 
-    <br>
-
-  <div class="row-container">
-    <div class="card-action">
+<div class="container mt-5"> <!-- Add Bootstrap container class for layout -->
+  <div class="row"> <!-- Add Bootstrap row class for layout -->
+    <div class="col-md-6 offset-md-3"> <!-- Add Bootstrap columns for layout -->
+      <p>User: {{ user.first_name }} {{ user.last_name}}</p>
+      <p>Email: {{ user.email }}</p>
+      <p>Total donation amount: ${{ total_amount_donated }}</p>
+      <br>
       {% if request.user.id == profile.user.id %}
-      <button class="btn-Charge" onclick="location.href='{% url 'charge'%}'">
-        Donate Now!
-      </button>
-      <button class="btn-Delete" onclick="location.href='{% url 'edit_profile'%}'">
-        Edit Profile
-      </button>
-      <a href="{% url 'change_password' %}" class="btn btn-primary">Change Password</a>
-    </div>
-    <div>
-      <button class="btn-Edit" onclick="location.href='{% url 'delete_user' user.id%}'">
-        Delete Profile
-      </button>
+      <div class="d-grid gap-2"> <!-- Use Bootstrap grid for button placement -->
+        <button class="btn btn-primary mb-3 btn-custom-width" onclick="location.href='{% url 'charge'%}'">
+          Donate Now!
+        </button>
+        <button class="btn btn-warning mb-3 btn-custom-width" onclick="location.href='{% url 'edit_profile'%}'">
+          Edit Profile
+        </button>
+        <button class="btn btn-success mb-3 btn-custom-width" onclick="location.href='{% url 'change_password'%}'">
+          Change Password
+        </button>
+        <button class="btn btn-danger mb-6 btn-custom-width" onclick="location.href='{% url 'delete_user' user.id%}'">
+          Delete Profile
+        </button>
+      </div>
       {% endif %}
     </div>
   </div>
 </div>
 {% endblock %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">

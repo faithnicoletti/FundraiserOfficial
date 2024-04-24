@@ -127,55 +127,65 @@ class DeleteUser(SuccessMessageMixin, DeleteView):
     success_message = "User has been deleted"
     success_url = reverse_lazy('home')
 
+from django.http import HttpResponseBadRequest
+import re
+
 @login_required
 def charge(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY
+    current_amount = ProfilePayment.objects.aggregate(current_amount=Sum('donation_amount'))['current_amount'] or 0
+    goal_amount = ProfilePayment().goal_amount
+
+    current_amount_float = float(current_amount)
+    percentage = (current_amount_float / goal_amount) * 100
+
     if request.method == 'POST':
         amount = request.POST.get('amount')
-        amount_in_cents = int(float(amount) * 100)
+        try:
+            amount_in_cents = int(float(amount) * 100)
+        except ValueError:
+            messages.error(request, 'Invalid input. Please enter a valid donation amount.')
+            return render(request, 'charge.html', {'current_amount': current_amount, 'percentage': percentage})
+
         checkout_session = stripe.checkout.Session.create(
-            payment_method_types = ['card'],
+            payment_method_types=['card'],
             line_items=[
-        {
-            'price_data': {
-                'currency': 'usd',
-                'product_data': {
-                    'name': 'Donation',
+                {
+                    'price_data': {
+                        'currency': 'usd',
+                        'product_data': {
+                            'name': 'Donation',
+                        },
+                        'unit_amount': amount_in_cents
+                    },
+                    'quantity': 1,
                 },
-                'unit_amount': amount_in_cents # Amount in cents
-            },
-            'quantity': 1,
-        },
-    ],
-            mode = 'payment',
-            customer_creation = 'always',
-            success_url = settings.REDIRECT_DOMAIN + '/payment_successful?session_id={CHECKOUT_SESSION_ID}',
-            cancel_url = settings.REDIRECT_DOMAIN + '/payment_cancelled'
+            ],
+            mode='payment',
+            customer_creation='always',
+            success_url=settings.REDIRECT_DOMAIN + '/payment_successful?session_id={CHECKOUT_SESSION_ID}',
+            cancel_url=settings.REDIRECT_DOMAIN + '/payment_cancelled'
         )
         return redirect(checkout_session.url, code=303)
-    return render(request, 'charge.html')
 
+    return render(request, 'charge.html', {'current_amount': current_amount, 'percentage': percentage})
 
 ## use Stripe dummy card: 4242 4242 4242 4242
 @login_required
 def payment_successful(request):
     if request.method == 'GET':
-        # Assuming the checkout session id is retrieved from the query parameters
         checkout_session_id = request.GET.get('session_id')
         try:
-            # Retrieve the session information from Stripe
             session = stripe.checkout.Session.retrieve(checkout_session_id)
             customer = stripe.Customer.retrieve(session.customer)
             
-            # Retrieve or create the profile associated with the current user
             profile, created = Profile.objects.get_or_create(user=request.user)
             
-            # Create a new ProfilePayment object for the current payment
             profile_payment = ProfilePayment.objects.create(
                 profile=profile,
                 stripe_checkout_id=checkout_session_id,
                 payment_bool=True,
-                donation_amount=session.amount_total / 100,  # Amount in dollars
+                donation_amount=session.amount_total / 100, 
                 timestamp=datetime.now()
             )
             

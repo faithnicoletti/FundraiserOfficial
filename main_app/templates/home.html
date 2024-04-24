@@ -2,39 +2,56 @@
 
 {% block content %}
 <br>
-<h1 style="color: #4F6367;">2024 Sugarload Marathon:</h1> 
+<h1 style="color: #4F6367;">2024 Sugarloaf Marathon:</h1>
+<br> 
 <h1>Palestine Fundraiser</h1>
 <br>
 <h3>Goal: $2,000.00</h3>
 <h3>Current: ${{ current_amount }}</h3>
 <br>
-<div class="progress" role="progressbar" aria-label="Success striped example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-  <div class="progress-bar progress-bar-striped bg-success" style="width: {{ percentage }}%"></div>
+<div class="container" style="max-width: 450px;">
+  <div class="row justify-content-center">
+      <div class="col-md-10 col-sm-2">
+          <div class="progress" role="progressbar" aria-label="Success striped example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar progress-bar-striped bg-success" style="width: {{ percentage }}%; height: 20px"></div>
+          </div>
+      </div>
+  </div>
 </div>
 <br>
-<h3 style="color: #4F6367;">Want to donate?</h3>
+<h3 style="color: #4F6367;">Make a contribution?</h3>
+<button class="btn btn-success mb-3 btn-custom-width" onclick="location.href='{% url 'charge'%}'">
+  Donate Now!
+</button>
+{% if not user.is_authenticated %}
+    <h5 style="color: #4F6367;">Sign up <a href="{% url 'signup' %}" style="color: #FE5F55;">here!</a></h5>
+    <h5 style="color: #4F6367;">Already have an account? <a href="{% url 'login' %}" style="color: #FE5F55;">Log in!</a></h5>
+{% endif %}
 <br>
-<h5 style="color: #4F6367;">Sign up <a href="{% url 'signup' %}" style="color: #FE5F55;">here!</a></h5>
-<br>
-<h5 style="color: #4F6367;">Already have an account? <a href="{% url 'login' %}" style="color: #FE5F55;">Log in!</a></h5>
-<br>
-<div class="dropdown-menu d-block position-static border-0 pt-0 mx-0 rounded-3 shadow overflow-hidden w-280px" data-bs-theme="dark">
-  <form class="p-2 mb-2 bg-dark border-bottom border-dark" id="donations-form">
-    <a href="#" id="toggle-donations" class="text-white cursor-pointer">DONATIONS:</a>
-  </form>
-  <ul class="list-unstyled mb-0" id="donations-list" style="display: none;">
-      {% for payment in recent_donations %}
-      <li>
-          <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
-              <span class="d-inline-block bg-success rounded-circle p-1"></span>
-              {{ payment.profile.user.username }} donated ${{ payment.donation_amount }}! 
-              <br>
-              {{ payment.timestamp }}
-          </a>
-      </li>
-      {% endfor %}
-  </ul>
+<div class="container">
+  <div class="row justify-content-center">
+      <div class="col-md-6">
+          <div class="dropdown-menu d-block position-static border-0 pt-0 mx-0 rounded-3 shadow overflow-hidden w-280px" data-bs-theme="dark">
+              <form class="p-2 mb-2 bg-dark border-bottom border-dark" id="donations-form">
+                  <a href="#" id="toggle-donations" class="text-white cursor-pointer">PAST DONATIONS:</a>
+              </form>
+              <ul class="list-unstyled mb-0" id="donations-list" style="display: none;">
+                  {% for payment in recent_donations %}
+                  <li>
+                      <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
+                          <span class="d-inline-block bg-success rounded-circle p-1"></span>
+                          {{ payment.profile.user.username }} donated ${{ payment.donation_amount }}! 
+                          <br>
+                          {{ payment.timestamp }}
+                      </a>
+                  </li>
+                  {% endfor %}
+              </ul>
+          </div>
+      </div>
+  </div>
 </div>
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const toggleBtn = document.getElementById('toggle-donations');

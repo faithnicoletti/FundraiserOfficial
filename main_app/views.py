@@ -85,7 +85,19 @@ def profile(request):
 
     total_amount_donated = ProfilePayment.objects.filter(profile=profile).aggregate(total_amount_donated=Sum('donation_amount'))['total_amount_donated'] or 0
 
-    context = {'user': user, 'profile': profile, 'total_amount_donated': total_amount_donated}
+    current_amount = ProfilePayment.objects.aggregate(current_amount=Sum('donation_amount'))['current_amount'] or 0
+    goal_amount = ProfilePayment().goal_amount
+
+    current_amount_float = float(current_amount)
+    percentage = (current_amount_float / goal_amount) * 100
+
+    context = {
+        'user': user, 'profile': profile,
+        'total_amount_donated': total_amount_donated, 
+        'goal_amount': goal_amount, 
+        'current_amount': current_amount,
+        'percentage': percentage}
+
     return render(request, 'profile.html', context)
 
 

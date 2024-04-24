@@ -1,34 +1,66 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<h1 style="color: #4F6367;"><span class="text-success">{{ user.username }}</span> 
+  you have currently donated <span class="text-success">${{ total_amount_donated }}.</span></h1>
 <br>
-<h1>Welcome,<span class="display-name"> {{ user.username }}!</span></h1>
-<div class="container mt-5"> <!-- Add Bootstrap container class for layout -->
-  <div class="row"> <!-- Add Bootstrap row class for layout -->
-    <div class="col-md-6 offset-md-3"> <!-- Add Bootstrap columns for layout -->
-      <p>User: {{ user.first_name }} {{ user.last_name}}</p>
-      <p>Email: {{ user.email }}</p>
-      <p>Total donation amount: ${{ total_amount_donated }}</p>
-      <br>
-      {% if request.user.id == profile.user.id %}
-      <div class="d-grid gap-2"> <!-- Use Bootstrap grid for button placement -->
-        <button class="btn btn-primary mb-3 btn-custom-width" onclick="location.href='{% url 'charge'%}'">
-          Donate Now!
-        </button>
-        <button class="btn btn-warning mb-3 btn-custom-width" onclick="location.href='{% url 'edit_profile'%}'">
-          Edit Profile
-        </button>
-        <button class="btn btn-success mb-3 btn-custom-width" onclick="location.href='{% url 'change_password'%}'">
-          Change Password
-        </button>
-        <button class="btn btn-danger mb-6 btn-custom-width" onclick="location.href='{% url 'delete_user' user.id%}'">
-          Delete Profile
-        </button>
+<h3>Goal: $ {{ goal_amount }}</h3>
+<h3>Current: $ {{ current_amount }}</h3>
+<br>
+<div class="container" style="max-width: 400px;">
+  <div class="row justify-content-center">
+      <div class="col-md-10 col-sm-2">
+          <div class="progress" role="progressbar" aria-label="Success striped example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar progress-bar-striped bg-success" style="width: {{ percentage }}%; height: 20px"></div>
+          </div>
       </div>
-      {% endif %}
+  </div>
+</div>
+<br>
+<h3 style="color: #4F6367;">Make a contribution?</h3>
+<button class="btn btn-success mb-3 btn-custom-width" onclick="location.href='{% url 'charge'%}'">
+  Donate Now!
+</button>
+<br>
+<h5>
+  <a class="text-success font-italic" href="{% url 'comment_section' other_username=user.username %}">
+  Go to Comment Section
+</a>
+</h5>
+<br>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="dropdown-menu d-block position-static border-0 pt-0 mx-0 rounded-3 shadow overflow-hidden w-280px" data-bs-theme="dark">
+              <form class="p-2 mb-2 bg-dark border-bottom border-dark" id="prefs-form">
+                <a href="#" id="toggle-prefs" class="text-white cursor-pointer">Profile Preferences:</a>
+            </form>
+              <ul class="list-unstyled mb-0" id="prefs-list" style="display: none;">
+                <li><a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Profile</a></li>
+                <li><a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a></li>
+                <li><a class="dropdown-item" href="{% url 'delete_user' user.id %}">Delete Profile</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const toggleBtn = document.getElementById('toggle-prefs');
+    const prefsList = document.getElementById('prefs-list');
+
+    toggleBtn.addEventListener('click', function() {
+        if (prefsList.style.display === 'none') {
+            prefsList.style.display = 'block';
+        } else {
+            prefsList.style.display = 'none';
+        }
+    });
+});
+</script>
 {% endblock %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">

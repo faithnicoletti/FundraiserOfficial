@@ -5,7 +5,7 @@ from datetime import datetime
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, update_session_auth_hash, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
-from .forms import CustomUserChangeForm, CustomPasswordChangeForm
+from .forms import CustomUserChangeForm, CustomPasswordChangeForm, CustomSignUpForm, CustomAuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.views.decorators.http import require_POST
@@ -52,10 +52,31 @@ class Meta(UserCreationForm.Meta):
     fields = ('username', 'first_name','last_name', 'email','password1', 'password2')
 
 
+def login_view(request):
+    error_message = ''
+    if request.method == 'POST':
+        form = CustomAuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('profile')
+            else:
+                error_message = 'Invalid username or password.'
+        else:
+            error_message = 'Invalid form submission. Please check your inputs.'
+    else:
+        form = CustomAuthenticationForm()
+
+    context = {'form': form, 'error_message': error_message}
+    return render(request, 'registration/login.html', context)
+
 def signup(request):
     error_message = ''
     if request.method == 'POST':
-        form = SignUpForm(request.POST, request.FILES)
+        form = CustomSignUpForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save(commit=False)
             user.email = form.cleaned_data['email']
@@ -68,9 +89,9 @@ def signup(request):
             login(request, user)
             return redirect('profile')
         else:
-            error_message = 'Invalid sign up - try again'
+            error_message = 'Invalid password - try again'
     else:
-        form = SignUpForm()
+        form = CustomSignUpForm()
     context = {'form': form, 'error_message': error_message}
     return render(request, 'registration/signup.html', context)
 

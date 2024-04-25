@@ -18,8 +18,8 @@
     </div>
     <form method="post">
         {% csrf_token %}
-        <input type="text" name="message" placeholder="Type your comment here" required>
-        <button type="submit">Post Comment</button>
+        <input type="text" name="message" style="color: white" placeholder="Type your comment here" required >
+        <button type="submit" class="btn btn-success">Post Comment</button>
     </form>
 </div>
 {% endblock %}

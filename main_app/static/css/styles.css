@@ -59,4 +59,8 @@ footer.page-footer {
         cursor: pointer;
     }
 } */
+form input[type="text"],
+form input[type="password"] {
+    color: white;
+}
 

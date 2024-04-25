@@ -34,6 +34,11 @@
                             <i class="bi bi-chat-right-heart"></i>
                         </a>
                     </li>
+                    <li>
+                        <a href="{% url 'resources' %}" class="nav-link px-2 text-white">
+                            <i class="bi bi-file-earmark-bar-graph"></i>
+                        </a>
+                    </li>
                     <form id="logout-form" action="{% url 'logout' %}" method="post">
                         {% csrf_token %}
                         <button type="submit" class="nav-link px-2 text-white border-0 bg-transparent">Logout</button>
@@ -45,6 +50,10 @@
                 </ul>
             </div>
         </nav>
+        <br>
+        {% if not request.path == '/' %}
+        <a href="{% url 'home' %}" class="btn btn-outline-light me-2 ms-3"><i class="bi bi-house-door"></i></a>
+        {% endif %}
     </header>
     <main class="text-bg-dark d-flex flex-column justify-content-center align-items-center">
         {% block content %}

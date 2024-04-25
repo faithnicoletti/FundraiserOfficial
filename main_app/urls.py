@@ -17,6 +17,8 @@ urlpatterns = [
     path('payment_cancelled', views.payment_cancelled, name='payment_cancelled'),
     path('stripe_webhook', views.stripe_webhook, name='stripe_webhook'),
     path('comment_history/', views.comment_history, name='comment_history'),
-    path('charge/', views.charge, name='charge')
+    path('charge/', views.charge, name='charge'),
+    path('resources/', views.resources, name='resources'),
+
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

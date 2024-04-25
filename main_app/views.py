@@ -283,3 +283,5 @@ def comment_history(request):
     context = {'all_comments': all_comments}
     return render(request, 'comment_history.html', context)
 
+def resources(request):
+    return render(request, 'resources.html')

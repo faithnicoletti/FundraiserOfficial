@@ -2,30 +2,26 @@
 
 {% block content %}
 <br>
-<h1 style="color:#4F6367;">Update <span style="color:#FE5F55;">{{ user.username }}</span></h1>
+<h1 style="color:#4F6367;">Update <span class="text-success">{{ user.username }}</span></h1>
 
 <form id="update-form" action="" method="POST" enctype="multipart/form-data">
   {% csrf_token %}
   {{ form.as_p }}
   
-  <input type="submit" value="Update!" class="btn" style="background-color:#FE5F55;">
+  <input type="submit" value="Update!" class="btn bg-success">
 </form>
 
 <p id="success-message" style="display: none; color: green;">Profile successfully updated!</p>
-
 <script>
-  // Add event listener for form submission
   document.getElementById("update-form").addEventListener("submit", function(event) {
-    // Show success message
+  
     document.getElementById("success-message").style.display = "block";
     
-    // Prevent default form submission behavior
     event.preventDefault();
     
-    // Redirect to profile page after a short delay (if needed)
     setTimeout(function() {
       window.location.href = "{% url 'profile' %}";
-    }, 2000); // Redirect after 2 seconds (adjust as needed)
+    }, 2000);
   });
 </script>
 

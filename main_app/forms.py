@@ -24,7 +24,6 @@ class CustomAuthenticationForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Apply the custom class to form fields
         for field_name in self.fields:
             self.fields[field_name].widget.attrs['class'] = 'form-control text-white'
 
@@ -40,6 +39,5 @@ class CustomSignUpForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Apply the custom class to form fields
         for field_name in self.fields:
             self.fields[field_name].widget.attrs['class'] = 'form-control text-white'

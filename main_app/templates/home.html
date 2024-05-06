@@ -38,7 +38,7 @@
               <ul class="list-unstyled mb-0" id="donations-list" style="display: none;">
                   {% for payment in recent_donations %}
                   <li>
-                      <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
+                      <a class="dropdown-item d-flex align-items-center gap-3 py-2" href="#">
                           <span class="d-inline-block bg-success rounded-circle p-1"></span>
                           {{ payment.profile.user.username }} donated ${{ payment.donation_amount }}! 
                           <br>

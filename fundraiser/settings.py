@@ -26,7 +26,7 @@ STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
 CHARGE = os.getenv('CHARGE')
 
-REDIRECT_DOMAIN = '*'
+REDIRECT_DOMAIN = 'https://palestinefundraiserapp-f017984ded07.herokuapp.com/'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 

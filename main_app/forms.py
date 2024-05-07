@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm,UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm, UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django import forms
 
@@ -8,33 +8,18 @@ class CustomUserChangeForm(UserChangeForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields.pop('password')
-
         for field_name in self.fields:
             self.fields[field_name].widget.attrs['class'] = 'form-control text-white'
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        if commit:
-            user.save()  # Save the user object
-        return user
 
 class CustomPasswordChangeForm(PasswordChangeForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         for field_name in self.fields:
             self.fields[field_name].widget.attrs['class'] = 'form-control text-white'
-
-    def save(self, commit=True):
-        return super().save()  # Just call the parent's save method without passing any arguments
-
-
 
 class CustomAuthenticationForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         for field_name in self.fields:
             self.fields[field_name].widget.attrs['class'] = 'form-control text-white'
 
@@ -49,6 +34,5 @@ class CustomSignUpForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         for field_name in self.fields:
             self.fields[field_name].widget.attrs['class'] = 'form-control text-white'

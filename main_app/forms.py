@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm, UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm,UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django import forms
 
@@ -8,18 +8,22 @@ class CustomUserChangeForm(UserChangeForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields.pop('password')
+
         for field_name in self.fields:
             self.fields[field_name].widget.attrs['class'] = 'form-control text-white'
 
 class CustomPasswordChangeForm(PasswordChangeForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         for field_name in self.fields:
             self.fields[field_name].widget.attrs['class'] = 'form-control text-white'
 
 class CustomAuthenticationForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         for field_name in self.fields:
             self.fields[field_name].widget.attrs['class'] = 'form-control text-white'
 
@@ -34,5 +38,6 @@ class CustomSignUpForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         for field_name in self.fields:
             self.fields[field_name].widget.attrs['class'] = 'form-control text-white'

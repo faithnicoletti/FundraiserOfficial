@@ -6,7 +6,7 @@
     <form method="post" class="comment-form">
         {% csrf_token %}
         <input type="text" name="message" placeholder="Type your comment here" required>
-        <button type="submit" class="btn btn-success">Post Comment</button>
+        <button type="submit" class="btn btn-success">Post</button>
     </form>
     <div id="comment-history">
         {% for comment in all_comments %}

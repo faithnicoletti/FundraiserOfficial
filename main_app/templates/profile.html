@@ -30,10 +30,8 @@
   Donate Now!
 </button>
 <br>
-<h5>              
-  <a style="color: #4F6367;" href="{% url 'comment_section' other_username=user.username %}">
-  Go to Comment Section
-</a>
+<h5>
+  <a href="{% url 'comment_section' other_username=user.username %}" type="button" class="btn btn-outline-light me-2">Comments</a>
 </h5>
 <br>
       <div class="container">

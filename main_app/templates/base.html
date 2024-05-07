@@ -20,11 +20,7 @@
         <nav>
             <div class="nav-wrapper text-bg-dark">
                 <ul>
-                    <li><a href="{% url 'home' %}" class="nav-link px-2 text-swhite">&nbsp;&nbsp;Palestine Fundraiser</a>
-                        {% if not request.path == '/' %}
-                        <a href="{% url 'home' %}" class="btn btn-outline-light me-2 ms-3"><i class="bi bi-house-door"></i></a>
-                        {% endif %}
-                    </li>
+                    <li><a href="{% url 'home' %}" class="nav-link px-2 text-swhite">&nbsp;&nbsp;Palestine Fundraiser</a></li>
                 </ul>
                 <ul class="right">
                     {% if user.is_authenticated %}
@@ -45,7 +41,7 @@
                     </li>
                     <form id="logout-form" action="{% url 'logout' %}" method="post">
                         {% csrf_token %}
-                        <a href="{% url 'logout' %}" type="button" class="btn btn-outline-light me-2">Logout</a>
+                        <button type="submit" class="btn btn-outline-light me-2">Logout</button>
                     </form>
                     {% else %}
                     <a href="{% url 'login' %}" type="button" class="btn btn-outline-light me-2">Login</a>
@@ -55,6 +51,9 @@
             </div>
         </nav>
         <br>
+        {% if not request.path == '/' %}
+        <a href="{% url 'home' %}" class="btn btn-outline-light me-2 ms-3"><i class="bi bi-house-door"></i></a>
+        {% endif %}
     </header>
     <main class="text-bg-dark d-flex flex-column justify-content-center align-items-center">
         {% block content %}

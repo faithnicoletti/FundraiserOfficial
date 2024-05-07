@@ -237,7 +237,6 @@ def payment_cancelled(request):
 @csrf_exempt
 def stripe_webhook(request):
 	stripe.api_key = settings.STRIPE_SECRET_KEY
-	time.sleep(10)
 	payload = request.body
 	signature_header = request.META['HTTP_STRIPE_SIGNATURE']
 	event = None

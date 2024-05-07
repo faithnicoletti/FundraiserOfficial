@@ -1,8 +1,16 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<h1 style="color: #4F6367;"><span class="text-success">{{ user.username }}</span> 
-  you have currently donated <span class="text-success">${{ total_amount_donated }}.</span></h1>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <h1 class="text-center" style="color: #4F6367;">
+        <span class="text-success">{{ user.username }}</span> 
+        you have donated <span class="text-success">${{ total_amount_donated }}.</span>
+      </h1>
+    </div>
+  </div>
+</div>
 <br>
 <h3>Goal: $ {{ goal_amount }}</h3>
 <h3>Current: $ {{ current_amount }}</h3>

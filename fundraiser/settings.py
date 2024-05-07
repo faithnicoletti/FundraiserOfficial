@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import django_heroku
 import dj_database_url
 from dotenv import load_dotenv
 
@@ -25,7 +26,7 @@ STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
 CHARGE = os.getenv('CHARGE')
 
-REDIRECT_DOMAIN = 'http://127.0.0.1:8000'
+REDIRECT_DOMAIN = '*'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -35,7 +36,7 @@ SECRET_KEY = 'django-insecure-@4e+8074*044@oc=gapenw-8a3o5@3uc1&yw9i+lb8-14m4)e5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost','palestinefundraiser-52a471f28592.herokuapp.com']
+ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = []
 
 # Application definition
@@ -89,7 +90,6 @@ DATABASES = {
 }
 
 
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -126,6 +126,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+django_heroku.settings(locals())
+
 LOGIN_REDIRECT_URL = '/profile/'
 LOGOUT_REDIRECT_URL = '/'
 

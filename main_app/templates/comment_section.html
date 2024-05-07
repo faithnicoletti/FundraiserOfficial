@@ -5,7 +5,7 @@
     <h1 style="color: #4F6367;">Comments</h1>
     <form method="post" class="comment-form">
         {% csrf_token %}
-        <input type="text" name="message" placeholder="Type your comment here" required>
+        <input type="text" name="message" placeholder="Type your comment here" required style="color: black;>
         <button type="submit" class="btn btn-success">Post</button>
     </form>
     <div id="comment-history">

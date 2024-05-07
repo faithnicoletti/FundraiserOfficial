@@ -16,7 +16,7 @@
           {% csrf_token %}
           <label for="amount">Enter donation amount:</label>
           <br>
-          <input type="text" id="amount" name="amount" style="color: black; width: 100px; height: 40px;">
+          <input type="text" id="amount" name="amount" style="color: white; width: 100px; height: 40px;">
           <br>
           <br>
           <button type="submit" class="btn btn-success">Donate</button>
@@ -24,18 +24,12 @@
       </div>
     </div>
   </div>
->
-  <script>
-    document.getElementById('amount').addEventListener('input', function (e) {
-     
-      let value = e.target.value;
-
-      value = value.replace(/[^0-9.]/g, '');
-
-      value = parseFloat(value).toFixed(2);
-
-      e.target.value = value;
-    });
-  </script>
 </body>
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
 {% endblock %}

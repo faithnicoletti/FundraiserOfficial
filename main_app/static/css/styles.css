@@ -57,7 +57,6 @@ form input[type="password"] {
     color: white;
 }
 
-/* Custom CSS for comment section */
 .comment-container {
     background-color: #f5f5f5;
     padding: 20px;
@@ -76,7 +75,7 @@ form input[type="password"] {
 }
 
 .comment-details {
-    overflow: hidden; /* Ensure proper alignment */
+    overflow: hidden; 
 }
 
 .comment .author {
@@ -94,12 +93,20 @@ form input[type="password"] {
     color: #333333;
 }
 
-/* Align comment bubbles */
 .comment {
     clear: both;
     overflow: auto;
 }
 
 .comment .content {
-    margin-top: 5px; /* Adjust as needed */
+    margin-top: 5px; 
+}
+
+.page-footer {
+    text-align: center; /
+}
+
+.centered {
+    display: inline-block; 
+    margin: 0 auto; 
 }

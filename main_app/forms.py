@@ -16,7 +16,7 @@ class CustomUserChangeForm(UserChangeForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         if commit:
-            user.save()
+            user.save()  # Save the user object
         return user
 
 class CustomPasswordChangeForm(PasswordChangeForm):
@@ -25,12 +25,10 @@ class CustomPasswordChangeForm(PasswordChangeForm):
 
         for field_name in self.fields:
             self.fields[field_name].widget.attrs['class'] = 'form-control text-white'
-    
+
     def save(self, commit=True):
-        user = super().save(commit=False)
-        if commit:
-            user.save()
-        return user
+        return super().save()  # Just call the parent's save method without passing any arguments
+
 
 
 class CustomAuthenticationForm(AuthenticationForm):

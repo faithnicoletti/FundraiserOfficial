@@ -161,7 +161,6 @@ class DeleteUser(SuccessMessageMixin, DeleteView):
     success_url = reverse_lazy('home')
 
 from django.http import HttpResponseBadRequest
-import re
 
 @login_required
 def charge(request):

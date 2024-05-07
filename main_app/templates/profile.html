@@ -12,7 +12,7 @@
   </div>
 </div>
 <br>
-<h3>Goal: $ {{ goal_amount }}</h3>
+<h3>Goal: $ {{ goal_amount|floatformat:"2" }}</h3>
 <h3>Current: $ {{ current_amount }}</h3>
 <br>
 <div class="container" style="max-width: 400px;">

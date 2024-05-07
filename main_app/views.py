@@ -196,8 +196,8 @@ def charge(request):
             ],
             mode='payment',
             customer_creation='always',
-            success_url=settings.REDIRECT_DOMAIN + '/payment_successful?session_id={CHECKOUT_SESSION_ID}',
-            cancel_url=settings.REDIRECT_DOMAIN + '/payment_cancelled'
+            success_url=settings.REDIRECT_DOMAIN + 'payment_successful?session_id={CHECKOUT_SESSION_ID}',
+            cancel_url=settings.REDIRECT_DOMAIN + 'payment_cancelled'
         )
         return redirect(checkout_session.url, code=303)
 

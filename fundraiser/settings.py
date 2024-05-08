@@ -31,7 +31,7 @@ REDIRECT_DOMAIN = 'https://palestinefundraiserapp-f017984ded07.herokuapp.com/'
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 
-# SECRET_KEY = 'django-insecure-@4e+8074*044@oc=gapenw-8a3o5@3uc1&yw9i+lb8-14m4)e5'
+SECRET_KEY = 'django-insecure-@4e+8074*044@oc=gapenw-8a3o5@3uc1&yw9i+lb8-14m4)e5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False

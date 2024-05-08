@@ -2,9 +2,15 @@ from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm,UserCre
 from django.contrib.auth.models import User
 from django import forms
 
-class CustomUserChangeForm(UserChangeForm):
-    class Meta(UserChangeForm.Meta):
-        fields = ('username', 'email', 'first_name', 'last_name')
+class CustomSignUpForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    first_name = forms.CharField(max_length=250)
+    last_name = forms.CharField(max_length=250)
+    username = forms.CharField(max_length=250)
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -12,6 +18,7 @@ class CustomUserChangeForm(UserChangeForm):
 
         for field_name in self.fields:
             self.fields[field_name].widget.attrs['class'] = 'form-control text-white'
+
 
 class CustomPasswordChangeForm(PasswordChangeForm):
     def __init__(self, *args, **kwargs):

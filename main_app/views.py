@@ -124,7 +124,6 @@ def profile(request):
 @login_required
 def edit_profile(request):
     if request.method == 'POST':
-        print("Form submitted to edit_profile view")
         form = CustomUserChangeForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()

@@ -33,13 +33,11 @@ REDIRECT_DOMAIN = 'https://palestinefundraiserapp-f017984ded07.herokuapp.com/'
 
 SECRET_KEY = 'django-insecure-@4e+8074*044@oc=gapenw-8a3o5@3uc1&yw9i+lb8-14m4)e5'
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
 ALLOWED_HOSTS = ['https://palestinefundraiserapp-f017984ded07.herokuapp.com/']
 CSRF_TRUSTED_ORIGINS = []
 
-# Application definition
 
 INSTALLED_APPS = [
     'main_app',

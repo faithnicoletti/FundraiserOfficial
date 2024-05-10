@@ -21,9 +21,9 @@ class ProfilePayment(models.Model):
     stripe_checkout_id = models.CharField(max_length=500)
 
     def update_total_amount_donated(self):
-        # Calculate the sum of all donations related to this profile
+        
         total_donated = ProfilePayment.objects.filter(profile=self.profile).aggregate(total_donated=Sum('donation_amount'))['total_donated'] or 0
-        # Update the total_amount_donated field in the related profile
+        
         self.profile.total_amount_donated = total_donated
         self.profile.save()
 
@@ -36,12 +36,12 @@ class ProfilePayment(models.Model):
 
     @property
     def current_amount(self):
-        # Get the total current amount of donations
+       
         return ProfilePayment.objects.aggregate(current_amount=Sum('donation_amount'))['current_amount'] or 0
 
     @property
     def goal_amount(self):
-        # Set your desired goal amount
+        
         return 2000.00
 
 
